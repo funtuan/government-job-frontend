@@ -1,7 +1,10 @@
 <template>
   <div id="app">
     <div class="ntitle">
-      訂閱人事行政總處事求人
+      <span class="highlight">
+        訂閱
+      </span>
+      人事行政總處事求人
     </div>
     <router-view/>
   </div>
@@ -28,14 +31,15 @@ nav a {
 .ntitle {
   font-size: 30px;
   padding: 20px;
-  margin: 30px;
-  border: 2px solid rgb(15, 82, 82, 0.5);
-  border-radius: 30px;
-  display: inline-block;
+  margin: 20px;
 }
 
 .highlight {
-  font-size: 28px;
+  background: #08a50d;
+  color: #fff;
+  border-radius: 10px;
+  padding: 5px 10px;
+  display: inline-block;
 }
 
 html {
