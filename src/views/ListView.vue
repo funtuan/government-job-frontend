@@ -60,13 +60,16 @@
         <vs-button
           success
           :active="active == 0"
-          @click="active = 0"
+          @click="autoNotify"
         >
           設置每日自動 LINE 提醒新職缺
         </vs-button>
       </div>
       <div class="notify-detail">
         將套用您的篩選條件，每日下午六點自動通知您新職缺。
+      </div>
+      <div class="notify-hint">
+        若要解除綁定，請至 <a href="https://notify-bot.line.me/my/">https://notify-bot.line.me/my/</a>
       </div>
     </div>
     <div class="list">
@@ -174,6 +177,13 @@ a {
   font-size: 12px;
   margin-top: 10px;
   text-align: center;
+}
+
+.notify-hint {
+  font-size: 12px;
+  margin-top: 10px;
+  text-align: center;
+  color: #999;
 }
 
 
@@ -311,6 +321,27 @@ a {
           }
         })
         this.list = res.data;
+      },
+
+      // oauth line notify
+      async autoNotify() {
+        const authEndpoint = 'https://notify-bot.line.me/oauth/authorize';
+
+        const params = new URLSearchParams();
+        params.append('response_type', 'code');
+        params.append('client_id', process.env.VUE_APP_LINE_NOTIFY_CLIENT_ID);
+        params.append('redirect_uri', window.location.origin + '/callback');
+        params.append('scope', 'notify');
+        params.append('state', JSON.stringify({
+          condition: {
+            sysnams: this.filterSysnams.length ? this.filterSysnams : undefined,
+            jobType: this.filterJobType !== '全部' ? this.filterJobType : undefined,
+            isDisability: this.filterHandicap ? false : undefined,
+            citys: this.filterCitys.length ? this.filterCitys : undefined,
+          },
+        }));
+
+        window.location.href = authEndpoint + '?' + params.toString();
       }
     },
     mounted() {

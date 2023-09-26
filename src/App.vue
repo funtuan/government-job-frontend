@@ -1,14 +1,7 @@
 <template>
   <div id="app">
-    <!-- <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </nav> -->
-    <div class="title">
-      <span class="highlight">
-        訂閱
-      </span>
-      人事行政總處事求人
+    <div class="ntitle">
+      訂閱人事行政總處事求人
     </div>
     <router-view/>
   </div>
@@ -32,10 +25,13 @@ nav a {
   font-weight: bold;
 }
 
-
-.title {
-  font-size: 22px;
+.ntitle {
+  font-size: 30px;
   padding: 20px;
+  margin: 30px;
+  border: 2px solid rgb(15, 82, 82, 0.5);
+  border-radius: 30px;
+  display: inline-block;
 }
 
 .highlight {

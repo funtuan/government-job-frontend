@@ -8,7 +8,12 @@ const routes = [
     path: '/',
     name: 'home',
     component: () => import('../views/ListView.vue')
-  }
+  },
+  {
+    path: '/callback',
+    name: 'callback',
+    component: () => import('../views/CallbackView.vue')
+  },
 ]
 
 const router = new VueRouter({
