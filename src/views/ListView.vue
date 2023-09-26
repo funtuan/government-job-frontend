@@ -190,7 +190,6 @@ a {
 </style>
 
 <script>
-  import axios from "axios";
   export default {
     data:() => ({
       jobTypes: [
@@ -310,7 +309,7 @@ a {
           filterCitys: this.filterCitys,
           filterJobType: this.filterJobType,
         }))
-        const res = await axios.post(process.env.VUE_APP_BACKEND_HOST, {
+        const res = await this.axios.post(process.env.VUE_APP_BACKEND_HOST, {
           start: 0,
           limit: 100,
           condition: {

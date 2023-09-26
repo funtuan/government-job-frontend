@@ -3,6 +3,10 @@ import Vuesax from 'vuesax'
 import App from './App.vue'
 import router from './router'
 
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+Vue.use(VueAxios, axios)
+
 import 'vuesax/dist/vuesax.css' //Vuesax styles
 // use drak mode
 Vue.use(Vuesax, {

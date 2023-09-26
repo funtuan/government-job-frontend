@@ -54,7 +54,6 @@ a {
 </style>
 
 <script>
-  import axios from "axios";
   export default {
     data:() => ({
       id: null,
@@ -74,7 +73,7 @@ a {
 
         const stateObj = JSON.parse(decodeURIComponent(state));
         // curl -X POST -H "Content-Type: application/json" -d '{"authorizationCode": "YOUR_AUTHORIZATION_CODE", "redirectUri": "YOUR_REDIRECT_URI", "condition": {"sysnams": ["綜合行政", "文教行政"]}}' http://localhost:8787/notifyConfig
-        const res = await axios.post(process.env.VUE_APP_BACKEND_HOST + 'notifyConfig', {
+        const res = await this.axios.post(process.env.VUE_APP_BACKEND_HOST + 'notifyConfig', {
           authorizationCode: code,
           redirectUri: window.location.origin + '/callback',
           condition: stateObj.condition,
