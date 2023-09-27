@@ -88,7 +88,7 @@
               </div>
             </template>
             <template #text>
-              <p>
+              <p class="workitem">
                 {{ one.fields.work_item }}
               </p>
             </template>
@@ -184,6 +184,10 @@ a {
   margin-top: 10px;
   text-align: center;
   color: #999;
+}
+
+.workitem {
+  word-break: break-all;
 }
 
 
