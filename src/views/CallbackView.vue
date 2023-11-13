@@ -72,6 +72,11 @@ a {
         }
 
         const stateObj = JSON.parse(decodeURIComponent(state));
+
+        // eslint-disable-next-line
+        void Tinybird.trackEvent('bind_notify', {
+          condition: stateObj.condition,
+        })
         // curl -X POST -H "Content-Type: application/json" -d '{"authorizationCode": "YOUR_AUTHORIZATION_CODE", "redirectUri": "YOUR_REDIRECT_URI", "condition": {"sysnams": ["綜合行政", "文教行政"]}}' http://localhost:8787/notifyConfig
         const res = await this.axios.post(process.env.VUE_APP_BACKEND_HOST + 'notifyConfig', {
           authorizationCode: code,

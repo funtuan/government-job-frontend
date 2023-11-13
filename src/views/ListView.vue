@@ -314,6 +314,15 @@ a {
           filterCitys: this.filterCitys,
           filterJobType: this.filterJobType,
         }))
+        // eslint-disable-next-line
+        void Tinybird.trackEvent('search_job', {
+          condition: {
+            sysnams: this.filterSysnams.length ? this.filterSysnams : undefined,
+            jobType: this.filterJobType !== '全部' ? this.filterJobType : undefined,
+            isDisability: this.filterHandicap ? false : undefined,
+            citys: this.filterCitys.length ? this.filterCitys : undefined,
+          },
+        })
         const res = await this.axios.post(process.env.VUE_APP_BACKEND_HOST, {
           start: 0,
           limit: 100,
@@ -331,6 +340,15 @@ a {
       async autoNotify() {
         const authEndpoint = 'https://notify-bot.line.me/oauth/authorize';
 
+        // eslint-disable-next-line
+        void Tinybird.trackEvent('redirect_notify', {
+          condition: {
+            sysnams: this.filterSysnams.length ? this.filterSysnams : undefined,
+            jobType: this.filterJobType !== '全部' ? this.filterJobType : undefined,
+            isDisability: this.filterHandicap ? false : undefined,
+            citys: this.filterCitys.length ? this.filterCitys : undefined,
+          },
+        })
         const params = new URLSearchParams();
         params.append('response_type', 'code');
         params.append('client_id', process.env.VUE_APP_LINE_NOTIFY_CLIENT_ID);
