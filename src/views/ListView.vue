@@ -57,19 +57,27 @@
     </div>
     <div class="notify">
       <div class="notify-button">
+        <vs-input
+          v-model="email"
+          placeholder="請輸入 Email"
+        >
+          <template #icon>
+            <i class='bx bx-user'></i>
+          </template>
+        </vs-input>
         <vs-button
           success
           :active="active == 0"
           @click="autoNotify"
         >
-          設置每日自動 LINE 提醒新職缺
+          訂閱每日 Email 提醒新職缺
         </vs-button>
       </div>
       <div class="notify-detail">
         將套用您的篩選條件，每日下午六點自動通知您新職缺。
       </div>
       <div class="notify-hint">
-        若要解除綁定，請至 <a href="https://notify-bot.line.me/my/">https://notify-bot.line.me/my/</a>
+        若要取消訂閱，請點擊信件中的取消訂閱連結。
       </div>
     </div>
     <div class="list">
@@ -209,6 +217,7 @@ a {
       ],
       filterCitys: [],
       filterJobType: '薦任',
+      email: '',
       groupCitys: [
         {
           groupName: '北區',
@@ -339,34 +348,48 @@ a {
         this.list = res.data;
       },
 
-      // oauth line notify
+      // email notify
       async autoNotify() {
-        const authEndpoint = 'https://notify-bot.line.me/oauth/authorize';
+        // validate email
+        if (!this.email || !/^\S+@\S+\.\S+$/.test(this.email)) {
+          this.$vs.notification({
+            color: 'danger',
+            title: 'Email 格式錯誤',
+            text: '請輸入正確的 Email',
+          });
+          return;
+        }
+
+        const condition = {
+          sysnams: this.filterSysnams.length ? this.filterSysnams : undefined,
+          jobType: this.filterJobType !== '全部' ? this.filterJobType : undefined,
+          isDisability: this.filterHandicap ? false : undefined,
+          citys: this.filterCitys.length ? this.filterCitys : undefined,
+        };
 
         // eslint-disable-next-line
-        void Tinybird.trackEvent('redirect_notify', {
-          condition: {
-            sysnams: this.filterSysnams.length ? this.filterSysnams : undefined,
-            jobType: this.filterJobType !== '全部' ? this.filterJobType : undefined,
-            isDisability: this.filterHandicap ? false : undefined,
-            citys: this.filterCitys.length ? this.filterCitys : undefined,
-          },
-        })
-        const params = new URLSearchParams();
-        params.append('response_type', 'code');
-        params.append('client_id', process.env.VUE_APP_LINE_NOTIFY_CLIENT_ID);
-        params.append('redirect_uri', window.location.origin + '/callback');
-        params.append('scope', 'notify');
-        params.append('state', JSON.stringify({
-          condition: {
-            sysnams: this.filterSysnams.length ? this.filterSysnams : undefined,
-            jobType: this.filterJobType !== '全部' ? this.filterJobType : undefined,
-            isDisability: this.filterHandicap ? false : undefined,
-            citys: this.filterCitys.length ? this.filterCitys : undefined,
-          },
-        }));
+        void Tinybird.trackEvent('bind_notify', {
+          condition,
+        });
 
-        window.location.href = authEndpoint + '?' + params.toString();
+        try {
+          await this.axios.post(process.env.VUE_APP_BACKEND_HOST + 'notifyConfig', {
+            email: this.email,
+            condition: condition,
+          });
+
+          this.$vs.notification({
+            color: 'success',
+            title: '訂閱成功',
+            text: '您將會每日收到新職缺的 Email 通知',
+          });
+        } catch (error) {
+          this.$vs.notification({
+            color: 'danger',
+            title: '訂閱失敗',
+            text: error.response.data.error || '發生未知的錯誤',
+          });
+        }
       }
     },
     mounted() {
